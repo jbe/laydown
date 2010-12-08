@@ -14,7 +14,11 @@
 #                                         ^
 #                                  $  «« ^¨^ »»  $
 #                                 http://jostein.be
-#  sample:                              '' ''
+#                                       '' ''
+#
+# Provides a simple Ruby DSL for defining HTML5 layouts
+# for web apps. For those of us who has written basically
+# the same html head 200 times and want to streamline it.
 
 require 'laydown'
 
@@ -28,9 +32,17 @@ layout = Laydown.layout do
   js '/maninacave/site.js'
   js @js
 
-  body "<h1>A man in\na cave</h1>"
+  body @body || '<p>Empty</p>'
 end
 
-@css = 'somesheet.css'
+
+@css  = 'somesheet.css'
+@body = '<h1>A man in a cave</h1>'
 
 puts Layout.render(self) # => beautiful html5
+
+# Note the binding passed to render (in this case self)
+# -- its instance variables are made accessible to the
+# layout block.
+
+
