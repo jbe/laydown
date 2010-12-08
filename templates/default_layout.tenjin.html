@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>#{@title}</title>
+    <meta name="description" content="#{@description}">
+    <meta name="keywords" content="#{@keywords}">
+    <?rb if @favicon ?>
+    <link rel="shortcun icon" href="#{@favicon}">
+    <?rb end ?>
+
+    <?rb @stylesheets.each do |sheet| ?>
+    <link rel="stylesheet" type="text/css" href="#{sheet}">
+    <?rb end ?>
+
+    <?rb @javascripts.each do |script| ?>
+    <script src="#{script}" ></script>
+    <?rb end ?>
+  </head>
+
+<body>
+#{ @body }
+</body>
+</html>
