@@ -33,22 +33,13 @@ module Laydown
     end
 
     def render(source_scope=::Laydown::NoScope.new)
-      dsl_scope = ::Laydown::DSL.new
-      copy_instance_variables(source_scope, dsl_scope)
+      dsl_scope = ::Laydown::DSL.new(source_scope)
+
       dsl_scope.send :instance_eval, &@conf
 
       scope = ::Laydown::TemplateScope.new(dsl_scope.dsl_values)
       scope.send :instance_eval, @template, @tpath
     end
-
-    private
-      def copy_instance_variables(a, b, destr=false)
-        a.instance_variables.each do |name|
-          if !b.instance_variable_defined?(name) or destr
-            b.instance_variable_set(name, a.instance_variable_get(name))
-          end
-        end
-      end
 
   end
 
