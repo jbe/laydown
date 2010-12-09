@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README",
      "Rakefile",
      "VERSION",
+     "laydown.gemspec",
      "lib/laydown.rb",
      "lib/templates/default_layout.rb",
      "templates/default_layout.tenjin.html",
