@@ -39,7 +39,7 @@ end
 @css  = 'somesheet.css'
 @body = '<h1>A man in a cave</h1>'
 
-puts Layout.render(self) # => beautiful html5
+puts layout.render(self) # => beautiful html5
 
 # Note the binding passed to render (in this case self)
 # -- its instance variables are made accessible to the
