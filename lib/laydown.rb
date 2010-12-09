@@ -28,6 +28,8 @@ module Laydown
   class Template
     def initialize(&conf)
       @conf = conf
+      @tpath = File.expand_path('../templates/default_layout.rb', __FILE__)
+      @template = IO.read(@tpath)
     end
 
     def render(source_scope=::Laydown::NoScope.new)
@@ -36,11 +38,7 @@ module Laydown
       dsl_scope.send :instance_eval, &@conf
 
       scope = ::Laydown::TemplateScope.new(dsl_scope.dsl_values)
-
-      tpath = File.expand_path('../templates/default_layout.rb', __FILE__)
-      template = IO.read(tpath)
-
-      scope.send :instance_eval, template, tpath
+      scope.send :instance_eval, @template, @tpath
     end
 
     private

@@ -6,12 +6,11 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "laydown"
     gem.summary = %Q{Pure Ruby HTML5 layout DSL for microframeworks.}
-    gem.description = %Q{Provides a simple Ruby DSL for defining HTML5 layouts for web apps. For those of us who has written basically the same html head 200 times and feels like stripping.}
+    gem.description = %Q{Provides a simple Ruby DSL for defining HTML5 layouts for web apps. For those of us who has written basically the same html head 200 times and feels like minimalism.}
     gem.email = "post@jostein.be"
     gem.homepage = "http://github.com/jbe/laydown"
     gem.authors = ["jbe"]
     gem.add_dependency "instant_dsl", ">= 0"
-    gem.add_dependency "markaby", ">= 0"
     gem.add_development_dependency "tenjin", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
