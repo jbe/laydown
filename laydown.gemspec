@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "laydown.gemspec",
      "lib/laydown.rb",
      "lib/templates/default_layout.rb",
+     "nothing",
      "templates/default_layout.tenjin.html",
      "test/rough.rb"
   ]
