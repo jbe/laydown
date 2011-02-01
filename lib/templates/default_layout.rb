@@ -2,9 +2,13 @@ _buf = '';  _buf << %Q`<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>#{@title}</title>
-    <meta name="description" content="#{@description}">
-    <meta name="keywords" content="#{@keywords}">\n`
+    <title>#{@title}</title>\n`
+    if @description
+ _buf << %Q`    <meta name="description" content="#{@description}">\n`
+    end
+    if @keywords
+ _buf << %Q`    <meta name="keywords" content="#{@keywords}">\n`
+    end
     if @favicon
  _buf << %Q`    <link rel="shortcun icon" href="#{@favicon}">\n`
     end
@@ -16,7 +20,8 @@ _buf = '';  _buf << %Q`<!DOCTYPE html>
     @javascripts.each do |script|
  _buf << %Q`    <script src="#{script}" ></script>\n`
     end
- _buf << %Q`  </head>
+ _buf << %Q`    #{ @head }
+  </head>
 
 <body>
 #{ @body }

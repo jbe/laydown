@@ -3,7 +3,7 @@ require 'instant_dsl'
 
 module Laydown
 
-  DSL_WORDS = [:title, :description, :favicon, :keywords, :css, :js, :body]
+  DSL_WORDS = [:title, :description, :favicon, :keywords, :css, :js, :head, :body]
   DSL = InstantDSL[*DSL_WORDS]
 
   class NoScope < Object; end
@@ -16,6 +16,7 @@ module Laydown
       @keywords     = v[:keywords].join(', ')
       @stylesheets  = v[:css].compact
       @javascripts  = v[:js].compact
+      @head         = v[:head].join("\n")
       @body         = v[:body].join("\n")
     end
   end
@@ -43,10 +44,6 @@ module Laydown
   end
 
 end
-
-
-
-
 
 
 

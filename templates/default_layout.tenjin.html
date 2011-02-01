@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8">
     <title>#{@title}</title>
+    <?rb if @description ?>
     <meta name="description" content="#{@description}">
+    <?rb end ?>
+    <?rb if @keywords ?>
     <meta name="keywords" content="#{@keywords}">
+    <?rb end ?>
     <?rb if @favicon ?>
     <link rel="shortcun icon" href="#{@favicon}">
     <?rb end ?>
@@ -16,6 +20,7 @@
     <?rb @javascripts.each do |script| ?>
     <script src="#{script}" ></script>
     <?rb end ?>
+    #{ @head }
   </head>
 
 <body>
