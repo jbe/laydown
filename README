@@ -1,48 +1,48 @@
-#
-#        .
-#       «=»                         ☺
-#        ^
-#    «« ^¨^ »»
-#     LAYDOWN
-#     ''|'|''
-#       | |
-#       | |
-#       | |
-#'''''''''''''''''''''''''''''
-#   $ gem install laydown
-#                                        «=»
-#                                         ^
-#                                  $  «« ^¨^ »»  $
-#                                 http://jostein.be
-#                                       '' ''
-#
-# Provides a simple Ruby DSL for defining HTML5 layouts
-# for web apps. For those of us who has written basically
-# the same html head 200 times and want to streamline it.
+  #
+  #        .
+  #       «=»                         ☺
+  #        ^
+  #    «« ^¨^ »»
+  #     LAYDOWN
+  #     ''|'|''
+  #       | |
+  #       | |
+  #       | |
+  #'''''''''''''''''''''''''''''
 
-require 'laydown'
+  #   $ gem install laydown
 
-layout = Laydown.layout do
-  title 'A man in a cave'
-  description 'A man is sitting in a cave. What will he do?'
-  keywords 'man, cave, mystery', @keywords
-  favicon '/maninacave.png'
-  css '/maninacave/style.css'
-  css @css
-  js '/maninacave/site.js'
-  js @js
+Laydown is a simple template language for defining HTML5 layouts in Ruby. Never write the same old boilerplate head layout again.
 
-  body @body || '<p>Empty</p>'
-end
+#            «=»
+#             ^
+#      $  «« ^¨^ »»  $
+#     http://jostein.be
+#           '' ''
 
+    require 'laydown'
 
-@css  = 'somesheet.css'
-@body = '<h1>A man in a cave</h1>'
+    layout = Laydown.layout do
+      title 'A man in a cave'
+      description 'A man is sitting in a cave. What will he do?'
+      keywords 'man, cave, mystery', @keywords
+      favicon '/maninacave.png'
+      css '/maninacave/style.css'
+      css @css, '/site.css'
+      js @js
 
-puts layout.render(self) # => beautiful html5
+      inline_js 'alert("Grrr");'
 
-# Note the binding passed to render (in this case self)
-# -- its instance variables are made accessible to the
-# layout block.
+      google_analytics 'UA-8079526-5'
+
+      body yield || '<p>Empty</p>'
+    end
+
+    @css  = 'somesheet.css'
+    @body = '<h1>A man in a cave</h1>'
+
+    puts layout.render(self) # => beautiful html5
+
+Note the binding passed to render -- its instance variables are made accessible to the layout block.
 
 
