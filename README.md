@@ -14,7 +14,9 @@
     #       | |           | oo     |
     #'''''''''''''''''''''''''''''******
 
-    #   $ gem install laydown
+
+
+    # $ gem install laydown
 
 Laydown is a simple template language for defining quick HTML5 layouts in Ruby. Never write the same old boilerplate again.
 
