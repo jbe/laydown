@@ -1,0 +1,45 @@
+! doctype html
+html
+  head
+    - if data[:title]
+      title == data[:title]
+
+    - if data[:favicon]
+      link rel="shortcut icon" url=data[:favicon]
+
+    - if data[:description]
+      meta name="description" content=data[:description]
+
+    - if data[:keywords]
+      meta name="keywords" content=data[:keywords]
+
+    - data[:css].flatten.each do |url|
+      - unless url == ''
+        link rel="stylesheet" type='text/css' href=url
+      
+    - data[:js].flatten.each do |url|
+      - unless url == ''
+        script type="text/javascript" src=url
+
+    - if data[:inline_js] && !data[:inline_js].empty?
+      script type="text/javascript"
+        - data[:inline_js].flatten.each do |code|
+          - unless code == ''
+            == code
+
+    - if data[:head]
+      == data[:head]
+
+  body class=data[:body_class]
+    == data[:body]
+
+    - if data[:ga_code]
+      javascript:
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', '#{data[:ga_code]}']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();

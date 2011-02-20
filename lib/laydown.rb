@@ -1,131 +1,88 @@
 
-require 'backports'
+require 'tilt'
+require 'temple/utils'
 
 
 module Laydown
-  TOPOBJECT = defined?(BasicObject) ? BasicObject : Object
 
-  def self.new(&blk)
-    Template.new(&blk)
-  end
+  DEFAULT_TEMPLATE = {
+    :charset      => 'utf-8',
+    :title        => nil,
+    :description  => nil,
+    :favicon      => nil,
+    :keywords     => nil,
+    :css          => [],
+    :js           => [],
+    :inline_js    => [],
+    :head         => [],
+    :body_class   => nil,
+    :body         => '#{yield}',
+    :ga_code      => nil
+  }
 
-  class Template
-    def initialize(&blk)
-      @layout = blk
-    end
+  def self.compile(template={})
 
-    def render(scope=Object.new, &blk)
-      dsl = ::Laydown::DSL.new
-      scope.instance_exec(dsl, &@layout)
-      Renderer.new(dsl._captured_values, &blk).render
-    end
-  end
+    template = DEFAULT_TEMPLATE.merge(template)
 
-  class DSL
-    TARGETS = %w{
-      charset lang title description favicon keywords css js
-      inline_js head body ga_code body_class
-      }
-
-    attr_reader :_captured_values
-
-    def initialize
-      @_captured_values = Hash.new { [] }
-    end
-
-    def _laydown(name, *values)
-      @_captured_values[name] += values
-    end
-
-    TARGETS.each do |name|
-      class_eval <<-RUBY
-        def #{name}(*a); _laydown('#{name}', *a); end
-      RUBY
-    end
-  end
-
-  class Renderer
-
-    def initialize(v)
-
-      @charset      = v['charset'].first || 'utf-8'
-      @lang         = v['lang'].first
-      @title        = v['title'].compact.join(' &ndash; ')
-      @favicon      = v['favicon'].first
-      @description  = v['description'].compact.join(' ') if v['description']
-      @keywords     = v['keywords'].compact.join(', ') if v['keywords']
-      @css          = v['css'].compact
-      @js           = v['js'].compact
-      @inline_js    = v['inline_js'].compact
-      @head         = v['head'].compact.join("\n")
-      @ga_code      = v['ga_code'].first
-      @body_class   = v['body_class'].compact.join(' ') if v['body_class']
-      @body = [block_given? ? yield : nil, v['body']].
-                      flatten.compact.join("\n")
-    end
-
-    def render
-      "<!DOCTYPE html>\n" +
-      _(:html, {:lang => @lang},
-        _(:head, {},
-          _(:meta, {:charset => @charset}) +
-          _(:title, {}, @title) +
-          (@favicon ?
-            _(:link, {:rel => 'shortcut icon', :href => @favicon}) : '') +
-          (@description ?
-            _(:meta, {:description => @description}) : '') +
-          (@keywords ?
-            _(:meta, {:keywords => @keywords}) : '') +
-          @css.map do |url|
-            _(:link, {:rel => :stylesheet, :type => 'text/css', :href => url})
-          end.join +
-          @js.map do |url|
-            _(:script, {:type => 'text/javascript', :src => url}, '')
-          end.join +
-          @inline_js.map do |code|
-            _(:script, {:type => 'text/javascript'}, code)
-          end.join +
-          (@ga_code ? google_analytics_js : '') +
-          @head
-        ) +
-        _(:body, {:class => @body_class},
-          @body
-        )
-      )
-    end
-
-
-    # html helpers
-
-    def _(name, props={}, contents=nil)
-      tag_str = name.to_s + prop_str(props)
-      if contents
-        "<#{tag_str}>\n#{contents}\n</#{name}>\n"
-      else
-        "<#{tag_str}/>\n"
+    [:charset, :title, :description, :favicon,
+    :keywords, :body_class, :body, :ga_code
+    ].each do |k|
+      template[k] = case template[k]
+        when Array  then template[k].join(template[k] == :keywords ? ', ' : '')
+        when String then template[k]
+        else template[k].to_s
       end
     end
 
-    def prop_str(hsh)
-      return '' if hsh.values.compact.empty?
-      ' ' + hsh.map do |k,v|
-        "#{k.to_s}='#{v.to_s}'" if v
-      end.compact.join(' ')
+    [:css, :js, :inline_js, :head].each do |k|
+      template[k] = Array(template[k]).flatten.compact
     end
 
-    def google_analytics_js
-    <<-JS
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', '#{@ga_code}']);
-_gaq.push(['_trackPageview']);
-(function() {
-var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-    JS
+    compiled = read_raw_template.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
+      val = template[:"#{$1}"]
+      case val
+        when String then interpolatize(val)
+        when nil    then 'nil'
+        when Array  then interpolatize(
+          val.map {|v| v.to_s }
+          )
+        else val.to_s
+      end
     end
 
+    puts compiled
+    compiled
+  end
+
+  def self.new(hsh={})
+    Template.new(hsh)
+  end
+
+  def self.read_raw_template
+    File.read(File.join(
+      File.dirname(__FILE__), 'template.rb'
+      ))
+  end
+
+  def self.interpolatize(obj)
+    puts obj
+    obj.inspect.gsub(/\\#\{/, '#{')
+  end
+
+  class Template < Tilt::Template
+
+    def initialize(hsh)
+      super(nil, 1, hsh) { '' } # tilt hack
+    end
+
+    def prepare
+      @src = Laydown.compile(options)
+    end
+
+    def precompiled_template(locals)
+      @src
+    end
   end
 end
+
 
