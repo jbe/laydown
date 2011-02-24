@@ -31,9 +31,9 @@ How about something like this?
       favicon:      'pill.png',
       keywords:     'man, #{@keywords}',
 
-      css:          ['site.css', '#{@css}'],
-      js:           ['app.js', '#{@js}'],
-      inline_js:    ['alert("#{msg}");'],
+      css:          ['site.css', :@css],
+      js:           ['app.js', :@js],
+      inline_js:    ['alert("#{@msg}");'],
 
       head:         '<meta soundtrack="Piazzolla">',
       body:         '#{yield}', # default
