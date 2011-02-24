@@ -12,8 +12,8 @@ describe Laydown do
       favicon:      'applesuck.png',
       keywords:     'apple suck lol #{@keywords}',
 
-      css:          ['applesuck.css', '#{@css}'],
-      js:           ['applesuck.js', '#{@js}'],
+      css:          ['applesuck.css', :@css],
+      js:           ['applesuck.js', :@js],
       inline_js:    'alert("#{@msg}");',
 
       head:         '<meta generator="Ubuntu">',
@@ -25,6 +25,7 @@ describe Laydown do
   it 'generates properly' do
     @reason = 'just because'
     @msg = 'boo'
+    @css = ['hubba.css', 'laaa.css']
     str = subject.render(self) { 'This is the body.' }
     str.should == nil
 

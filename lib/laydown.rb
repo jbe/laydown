@@ -43,9 +43,7 @@ module Laydown
       case val
         when String then interpolatize(val)
         when nil    then 'nil'
-        when Array  then interpolatize(
-          val.map {|v| v.to_s }
-          )
+        when Array  then interpolatize_array(val)
         else val.to_s
       end
     end
@@ -65,8 +63,18 @@ module Laydown
   end
 
   def self.interpolatize(obj)
-    puts obj
     obj.inspect.gsub(/\\#\{/, '#{')
+  end
+
+  def self.interpolatize_array(arr)
+    '[' +
+    arr.map do |v|
+      case v
+        when String then interpolatize(v)
+        when Symbol then v.to_s
+        else raise "invalid value #{v.inspect}"
+      end
+    end.join(', ') + ']'
   end
 
   class Template < Tilt::Template
