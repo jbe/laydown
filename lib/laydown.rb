@@ -19,12 +19,12 @@ module Laydown
     :js           => [],
     :inline_js    => [],
     :head         => [],
-    :body_class   => nil,
+    :body_class   => [],
     :body         => :yield,
     :ga_code      => :@ga_code
   }
 
-  ARRAY_PROPS = [:keywords, :css, :js, :inline_js, :head]
+  ARRAY_PROPS = [:keywords, :css, :js, :inline_js, :head, :body_class]
 
   def self.compile(template={})
 

@@ -11,7 +11,7 @@ html
       meta name="description" content=data[:description]
 
     - if data[:keywords].any?
-      meta name="keywords" content=data[:keywords].join(', ')
+      meta name="keywords" content=data[:keywords].flatten.join(', ')
 
     - data[:css].flatten.each do |url|
       - unless url == ''
@@ -31,7 +31,7 @@ html
       - data[:head].each do |item|
         == item
 
-  body class=data[:body_class]
+  body class=data[:body_class].flatten.join(' ')
     == data[:body]
 
     - if data[:ga_code]
