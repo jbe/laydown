@@ -14,9 +14,7 @@
     #       | |           | oo     |
     #'''''''''''''''''''''''''''''******
 
-Bored of writing the same html boilerplate every time you make a new app?
-
-How about something like this?
+Quick HTML5 layouts.
 
     # $ gem install laydown
 
@@ -29,16 +27,16 @@ How about something like this?
       title:        'A man in a #{@where}',
       description:  'Very interesting',
       favicon:      'pill.png',
-      keywords:     'man, #{@keywords}',
+      keywords:     ['man', :@keywords],
 
       css:          ['site.css', :@css],
       js:           ['app.js', :@js],
       inline_js:    ['alert("#{@msg}");'],
 
       head:         '<meta soundtrack="Piazzolla">',
-      body:         '#{yield}', # default
-      body_class:   'dark',
-      ga_code:      'ga-some-number'
+      body:         :yield, # default
+      body_class:   ['dark', :@body_class],
+      ga_code:      'google_analytics_id'
       )
 
     # ----------------------------
