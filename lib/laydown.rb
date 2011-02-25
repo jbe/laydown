@@ -5,76 +5,49 @@ require 'temple/utils'
 
 module Laydown
 
+  RAW_TEMPLATE = File.read(File.join(
+    File.dirname(__FILE__), 'template.rb'
+    ))
+
   DEFAULT_TEMPLATE = {
     :charset      => 'utf-8',
     :title        => nil,
     :description  => nil,
     :favicon      => nil,
-    :keywords     => nil,
+    :keywords     => [],
     :css          => [],
     :js           => [],
     :inline_js    => [],
     :head         => [],
     :body_class   => nil,
-    :body         => '#{yield}',
-    :ga_code      => nil
+    :body         => :yield,
+    :ga_code      => :@ga_code
   }
+
+  ARRAY_PROPS = [:keywords, :css, :js, :inline_js, :head]
 
   def self.compile(template={})
 
     template = DEFAULT_TEMPLATE.merge(template)
 
-    [:charset, :title, :description, :favicon,
-    :keywords, :body_class, :body, :ga_code
-    ].each do |k|
-      template[k] = case template[k]
-        when Array  then template[k].join(template[k] == :keywords ? ', ' : '')
-        when String then template[k]
-        else template[k].to_s
-      end
-    end
-
-    [:css, :js, :inline_js, :head].each do |k|
+    ARRAY_PROPS.each do |k|
       template[k] = Array(template[k]).flatten.compact
     end
 
-    compiled = read_raw_template.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
-      val = template[:"#{$1}"]
-      case val
-        when String then interpolatize(val)
-        when nil    then 'nil'
-        when Array  then interpolatize_array(val)
-        else val.to_s
-      end
+    RAW_TEMPLATE.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
+      literalize template[:"#{$1}"]
     end
-
-    puts compiled
-    compiled
   end
 
-  def self.new(hsh={})
-    Template.new(hsh)
-  end
-
-  def self.read_raw_template
-    File.read(File.join(
-      File.dirname(__FILE__), 'template.rb'
-      ))
-  end
-
-  def self.interpolatize(obj)
-    obj.inspect.gsub(/\\#\{/, '#{')
-  end
-
-  def self.interpolatize_array(arr)
-    '[' +
-    arr.map do |v|
-      case v
-        when String then interpolatize(v)
-        when Symbol then v.to_s
-        else raise "invalid value #{v.inspect}"
-      end
-    end.join(', ') + ']'
+  def self.literalize(obj)
+    case obj
+      when String then obj.inspect.gsub(/\\#\{/, '#{') + "+''"
+      when Symbol then obj.to_s
+      when nil    then 'nil'
+      when Array
+        '[' + obj.map {|o| literalize(o) }.join(', ') + ']'
+      else obj.to_s.inspect
+    end
   end
 
   class Template < Tilt::Template
@@ -90,6 +63,10 @@ module Laydown
     def precompiled_template(locals)
       @src
     end
+  end
+
+  def self.new(hsh={})
+    Template.new(hsh)
   end
 end
 

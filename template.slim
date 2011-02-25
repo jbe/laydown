@@ -10,8 +10,8 @@ html
     - if data[:description]
       meta name="description" content=data[:description]
 
-    - if data[:keywords]
-      meta name="keywords" content=data[:keywords]
+    - if data[:keywords].any?
+      meta name="keywords" content=data[:keywords].join(', ')
 
     - data[:css].flatten.each do |url|
       - unless url == ''
@@ -28,7 +28,8 @@ html
             == code
 
     - if data[:head]
-      == data[:head]
+      - data[:head].each do |item|
+        == item
 
   body class=data[:body_class]
     == data[:body]

@@ -10,8 +10,8 @@ _buf = [] ; _temple_pre_tags = /<pre|<textarea/ ; _buf << ("<!DOCTYPE html><html
 "") ; end ; if data[:description] ; 
  ; _buf << ("<meta content=\"#{Temple::Utils.escape_html((data[:description]))}\" name=\"description\">"\
 ""\
-"") ; end ; if data[:keywords] ; 
- ; _buf << ("<meta content=\"#{Temple::Utils.escape_html((data[:keywords]))}\" name=\"keywords\">"\
+"") ; end ; if data[:keywords].any? ; 
+ ; _buf << ("<meta content=\"#{Temple::Utils.escape_html((data[:keywords].join(', ')))}\" name=\"keywords\">"\
 ""\
 "") ; end ; data[:css].flatten.each do |url| ; 
  ; unless url == '' ; 
@@ -28,9 +28,10 @@ _buf = [] ; _temple_pre_tags = /<pre|<textarea/ ; _buf << ("<!DOCTYPE html><html
  ; _buf << (code) ; 
  ; 
  ; end ; end ; _buf << ("</script>") ; end ; if data[:head] ; 
- ; _buf << (data[:head]) ; 
+ ; data[:head].each do |item| ; 
+ ; _buf << (item) ; 
  ; 
- ; end ; _buf << ("</head><body class=\"#{Temple::Utils.escape_html((data[:body_class]))}\">"\
+ ; end ; end ; _buf << ("</head><body class=\"#{Temple::Utils.escape_html((data[:body_class]))}\">"\
 "#{data[:body]}"\
 ""\
 "") ; if data[:ga_code] ; 
