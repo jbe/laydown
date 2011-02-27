@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{laydown}
-  s.version = "0.6.1"
+  s.version = "0.6.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["jbe"]
-  s.date = %q{2011-02-25}
+  s.date = %q{2011-02-27}
   s.description = %q{Provides a simple Ruby DSL for defining HTML5 layouts for web apps. For those who has written the same layout too many times.}
   s.email = %q{post@jostein.be}
   s.extra_rdoc_files = [
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     "VERSION",
     "laydown.gemspec",
     "lib/laydown.rb",
-    "lib/template.rb",
+    "lib/laydown/template.rb",
     "spec/laydown_spec.rb",
     "template.slim"
   ]
