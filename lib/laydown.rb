@@ -22,30 +22,54 @@ module Laydown
     :ga_code      => :@ga_code
   }
 
-  ARRAY_PROPS = [:keywords, :css, :js, :inline_js, :head, :body_class]
+  class << self
 
-  def self.compile(template={})
-
-    template = DEFAULTS.merge(template)
-
-    ARRAY_PROPS.each do |k|
-      template[k] = Array(template[k]).flatten.compact
+    def properties
+      DEFAULTS.keys
     end
 
-    TEMPLATE.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
-      literalize template[:"#{$1}"]
+    def plural_properties
+      properties.select {|name| DEFAULTS[name].is_a?(Array) }
     end
-  end
 
-  def self.literalize(obj)
-    case obj
-      when String then obj.inspect.gsub(/\\#\{/, '#{') + "+''"
-      when Symbol then obj.to_s
-      when nil    then 'nil'
-      when Array
-        '[' + obj.map {|o| literalize(o) }.join(', ') + ']'
-      else obj.to_s.inspect
+    def compile(values={})
+      process(values)
+      validate(values)
+      make_template_from(values)
     end
+
+    def process(values)
+      DEFAULTS.each {|k,v| values[k] ||= v }
+      plural_properties.each do |k|
+        values[k] = Array(values[k]).flatten.compact
+      end
+    end
+
+    def validate(values)
+      values.keys.each do |value|
+        unless DEFAULTS.keys.include?(value)
+          raise "no Laydown property called #{value.inspect}"
+        end
+      end
+    end
+
+    def make_template_from(values)
+      TEMPLATE.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
+        literalize values[:"#{$1}"]
+      end
+    end
+
+    def literalize(obj)
+      case obj
+        when String then obj.inspect.gsub(/\\#\{/, '#{') + "+''"
+        when Symbol then obj.to_s
+        when nil    then 'nil'
+        when Array
+          '[' + obj.map {|o| literalize(o) }.join(', ') + ']'
+        else obj.to_s.inspect
+      end
+    end
+
   end
 
   class Template < Tilt::Template
