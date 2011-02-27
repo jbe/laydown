@@ -11,6 +11,7 @@ begin
     gem.homepage = "http://github.com/jbe/laydown"
     gem.authors = ["jbe"]
     gem.add_dependency "temple" #, ">= 0"
+    gem.add_dependency "tilt" #, ">= 0"
     gem.add_development_dependency "slim", ">= 0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
