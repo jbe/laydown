@@ -9,13 +9,13 @@ module Laydown
 
   DEFAULTS = {
     :charset      => 'utf-8',
-    :title        => nil,
+    :title        => '#{@title}',
     :description  => nil,
     :favicon      => nil,
-    :keywords     => [],
-    :css          => [],
-    :js           => [],
-    :inline_js    => [],
+    :keywords     => [:@keywords],
+    :css          => [:@css, :@stylesheets],
+    :js           => [:@javascripts, :@js],
+    :inline_js    => [:@inline_js],
     :head         => [],
     :body_class   => [],
     :body         => :yield,
