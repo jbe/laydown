@@ -5,11 +5,9 @@ require 'temple/utils'
 
 module Laydown
 
-  RAW_TEMPLATE = File.read(File.join(
-    File.dirname(__FILE__), 'template.rb'
-    ))
+  require 'laydown/template'
 
-  DEFAULT_TEMPLATE = {
+  DEFAULTS = {
     :charset      => 'utf-8',
     :title        => nil,
     :description  => nil,
@@ -28,13 +26,13 @@ module Laydown
 
   def self.compile(template={})
 
-    template = DEFAULT_TEMPLATE.merge(template)
+    template = DEFAULTS.merge(template)
 
     ARRAY_PROPS.each do |k|
       template[k] = Array(template[k]).flatten.compact
     end
 
-    RAW_TEMPLATE.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
+    TEMPLATE.gsub(/data\[:([a-zA-Z0-9_]+)\]/) do |m|
       literalize template[:"#{$1}"]
     end
   end

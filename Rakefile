@@ -27,8 +27,10 @@ namespace :build do
     engine = Slim::Engine.new()
     compiled = engine.compile(src)
 
-    File.open('lib/template.rb', 'w') do |f|
+    File.open('lib/laydown/template.rb', 'w') do |f|
+      f.write "Laydown::TEMPLATE = <<'TEMPLATE'\n"
       f.write compiled
+      f.write "\nTEMPLATE\n"
     end
   end
 end

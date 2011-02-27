@@ -1,3 +1,4 @@
+Laydown::TEMPLATE = <<'TEMPLATE'
 _buf = [] ; _temple_pre_tags = /<pre|<textarea/ ; _buf << ("<!DOCTYPE html><html><head>") ; 
  ; 
  ; 
@@ -45,3 +46,4 @@ _buf = [] ; _temple_pre_tags = /<pre|<textarea/ ; _buf << ("<!DOCTYPE html><html
 ""\
 ""\
 "") ; end ; _buf << ("</body></html>") ; _buf = _buf.join
+TEMPLATE
